@@ -26,5 +26,45 @@ createServer((req,res) => {
 req는 요청에 대한 여러가지 정보를 담은 객체이고
 res는 응답을 위한 객체이다.
 
+## nodejs의 이벤트 처리
+```javascript
+  if (url === "/message" && method === "POST") {
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk);
+    });
+    return req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split("=")[1];
+      console.log(message);
+      fs.writeFile("message.txt", message, (err) => {
+        res.statusCode = 302;
+        res.setHeader("Location", "/");
+        return res.end();
+      });
+    });
+  }
+```
+on 메서드를 이용하여 req에 대한 처리를 한다. chunk라는 데이터 덩어리를 사용하여 
+해당 작업을 진행하고 종료한다.
+
+
+## nodejs 이벤트
+
+
+## npm 3rd party package를 활용한 node 서버 구성
+
+npm i nodemon -g 
+nodemon를 사용하여 실시간으로 코드를 수정하더라도 서버가 자동으로 재시작 된다.
+
+
+## nodemon을 활용한 VisualStudio Debug 방법
+
+launch.json 설정.
+```
+ "runtimeExecutable": "nodemon",
+            "console": "integratedTerminal"
+```
 
 
